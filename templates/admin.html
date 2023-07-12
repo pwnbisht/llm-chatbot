@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    {% include 'head.html' %}
+    <body>
+        {% include 'nav.html' %}
+        <main>
+            <h1>Pawan Bot Admin 🤖</h1>
+            <h2>Current State</h2>
+            <details>
+                <summary>Show Information</summary>
+                <ul>
+                    <p>Authenticated as {{ username }}</p>
+                    <p>Index Number: {{ index_number }}</p>
+                    <p>Queried Index: {{ queried_index }}</p>
+                    <p>Current Prompt ID: {{ prompt_id }}</p>
+                </ul>
+                <pre>
+                    {{ current_prompt }}
+                </pre>
+            </details>
+            <h2>Prompts</h2>
+            <ul>
+                {% for prompt in prompts %}
+                    <li {% if prompt['status'] == 0 %}style="opacity: 0.5;"{% endif %}>
+                        {% if prompt['status'] == 0 %}<p style="font-size: 0.8em;">Downvoted</p>{% endif %}
+                        <h3>{{ prompt['question'] }}</h3>
+                        <pre>{{ prompt['prompt'] | safe }}</pre>
+                        {% if prompt['date'] %}
+                            <p>Generated on {{ prompt['date'] }}</p>
+                        {% endif %}
+                        <p style="font-size: 0.8em;">(prompt ID {{ prompt['prompt_id'] }})</p>
+                        {% if prompt['username'] %}
+                            <p>Question asked by <a href="{{ prompt['username'] }}">{{ prompt[5].replace("https://", "").replace("http://", "").strip("/") }}</a>.</p>
+                        {% endif %}
+                        <p><a href="/prompt/{{ prompt['id'] }}">View Prompt</a></p>
+                    </li>
+                {% endfor %}
+            </ul>
+            {% for i in range(1, num_pages + 1) %}
+                <a href="/adminpage?page={{ i }}">{{ i }}</a>
+            {% endfor %}
+            <style>
+                main li {
+                    margin-bottom: 2em;
+                    border-bottom: 1px solid #ccc;
+                }
+            </style>
+        </main>
+    </body>
+</html>
